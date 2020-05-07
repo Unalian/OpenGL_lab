@@ -9,7 +9,7 @@
 #ifdef WIN32
 #include <windows.h>
 #endif
-
+#include <math.h>
 #include <stdlib.h>
 #include <iostream>
 #include <fstream>
@@ -18,7 +18,7 @@
 #include <GLUT/glut.h>
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
-#include <math.h>
+
 #else
 #include <GL/glut.h>
 #include <GL/glu.h>
@@ -27,6 +27,13 @@
 float angle = 0.0f;
 float lx = 0.0f, lz = -1.0f;
 float x = 0.0f, z = 5.0f;
+GLfloat gray[] = {0.0f, 0.9f, 0.9f, 1.0f};
+
+GLfloat LightAmbient[] = {1.0f, 1.0f, 1.0f, 1.0f};
+GLfloat LightDiffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
+GLfloat LightPosition[] = {0.0f, 0.0f, 2.0f, 1.0f};
+GLfloat light = 1;
+
 
 void drawSnowMan(){
     glColor3f(1.0f, 1.0f, 1.0f);
@@ -105,11 +112,16 @@ void ChangeSize(int w,int h){
     glLoadIdentity();
 }
 
- 
+
 void processNormalKey(unsigned char key,int x,int y){
     if(key == 27){
         exit(0);
     }
+    if (key == 'l') {
+        light =!light;
+        light?glEnable(GL_LIGHTING):glDisable(GL_LIGHTING);
+    }
+    
 }
 void processSpecialKey(int key,int xx, int yy){
     float fraction = 0.1f;
@@ -135,6 +147,16 @@ void processSpecialKey(int key,int xx, int yy){
     }
 }
 
+void initGL(){
+    
+    glLightfv(GL_LIGHT1,GL_AMBIENT,LightAmbient);
+    glLightfv(GL_LIGHT1,GL_DIFFUSE,LightDiffuse);
+    glLightfv(GL_LIGHT1,GL_POSITION,LightPosition);
+    glEnable(GL_LIGHT1);
+    
+    glMaterialfv(GL_FRONT, GL_DIFFUSE,gray);
+    
+}
 int main (int argc, char *argv[])
 {   //init glut and creat window
     glutInit(&argc, argv);
@@ -150,7 +172,7 @@ int main (int argc, char *argv[])
     glutIdleFunc(RenderScene);
     glutKeyboardFunc(processNormalKey);
     glutSpecialFunc(processSpecialKey);
-    
+    initGL();
     
     glEnable(GL_DEPTH_TEST);
     

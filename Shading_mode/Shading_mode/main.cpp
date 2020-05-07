@@ -18,12 +18,14 @@
 #include <GLUT/glut.h>
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
-#include <math.h>
+
 #else
 #include <GL/glut.h>
 #include <GL/glu.h>
 #include <GL/gl.h>
 #endif
+
+#include <math.h>
 int mode = 0;
 GLfloat windowWidth,windowHeight;
 
@@ -95,13 +97,12 @@ void processSpecialKey(int key,int x, int y){
 }
 
 
-int main(int argc, const char * argv[]) {
-
+int main(int argc, char * argv[]) {
+    glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGB);//使用雙緩衝區有利於動畫的流暢性 //在renderScene中調用glutSwapBuffers() 雙緩衝區的切換
     glutInitWindowSize(100, 100);
     glutInitWindowPosition(0, 100);
-    glutCreateWindow("Shading Mode");
-    
+    glutCreateWindow("Rotary Triangle");
     
     // register the callbacks
     glutDisplayFunc(RenderScene);
